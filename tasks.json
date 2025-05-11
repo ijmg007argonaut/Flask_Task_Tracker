@@ -1,0 +1,63 @@
+[
+  {
+    "id": 1,
+    "title": "Build aquarium PVC light stand ",
+    "done": true,
+    "due_date": "2025-06-02",
+    "due_time": "18:00",
+    "image": "IMG_20250508_050058.jpg",
+    "repeat": "none"
+  },
+  {
+    "id": 2,
+    "title": "Figure out how to secure aquarium sculpture. Maybe thin superglue and sand mixture?",
+    "done": true,
+    "due_date": "2025-06-06",
+    "due_time": "06:00",
+    "image": "ornament_mock_up.jpg",
+    "repeat": "none"
+  },
+  {
+    "id": 4,
+    "title": "Do rubik's cube daily drills",
+    "done": false,
+    "due_date": "2025-06-07",
+    "due_time": "06:00",
+    "image": "IMG_20250508_045915.jpg",
+    "repeat": "weekly"
+  },
+  {
+    "id": 5,
+    "title": "Do Github projects",
+    "done": false,
+    "due_date": "2025-06-14",
+    "due_time": "21:46",
+    "repeat": "none"
+  },
+  {
+    "id": 6,
+    "title": "Do typing lessons",
+    "done": false,
+    "due_date": "2025-06-09",
+    "due_time": "21:00",
+    "repeat": "none"
+  },
+  {
+    "id": 10,
+    "title": "Do daily burpees ",
+    "done": false,
+    "due_date": "2025-06-07",
+    "due_time": "08:00",
+    "repeat": "none",
+    "image": "image-asset.jpeg"
+  },
+  {
+    "id": 11,
+    "title": "Feed pet paradise fish",
+    "due_date": "2025-06-10",
+    "due_time": "19:45",
+    "done": false,
+    "image": "IMG_20250508_050109.jpg",
+    "repeat": "none"
+  }
+]

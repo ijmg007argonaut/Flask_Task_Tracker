@@ -1,0 +1,76 @@
+body {
+    background-color: #f4f6f8; /* Soft light gray */
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff; /* White background for contrast */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background-color: #e2e8f0; /* Pale blue/gray for headers */
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #ccc;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr.complete td {
+    background-color: #e6ffed; /* Light green for completed tasks */
+}
+
+tr.incomplete td {
+    background-color: #fff5f5; /* Very light red for incomplete */
+}
+
+form input[type="submit"] {
+    background-color: #3182ce; /* blue */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #2b6cb0;
+}
+
+.complete { color: green; }
+.incomplete { color: red; }
+
+.task-image {
+    transition: transform 0.3s ease;
+}
+
+.task-image:hover {
+    transform: scale(2.8);
+    z-index: 100;
+    position: relative;
+}
+
+.edit-button {
+    background-color: #337ab7;  /* Bootstrap blue */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.edit-button:hover {
+    background-color: #286090;
+}
+
