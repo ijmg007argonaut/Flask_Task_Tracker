@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Link to the external CSS file stored in the /static folder -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Page heading -->
+    <h1>TASK LIST</h1>
+    <!-- 
+    DASHBOARD TRIGGER BUTTON: 'SEARCH'
+    HTML FORM: '<form action="/" method="GET" ...'
+    HTTP REQUEST METHOD: GET
+    URL SENT: '/' (http://127.0.0.1:5000/)
+    HANDLER FUNCTION: @app.route('/', methods=['GET'])
+    User search for a task in tasks list via a key-value pair: key = name="q", value = the user's typed query.
+    -->
+    <fieldset style="border: 2px solid black; padding: 10px; margin-bottom: 20px;">
+        <legend><strong>SEARCH FOR AN EXISTING TASK</strong></legend>
+        <form action="/" method="GET" style="display:inline;  gap: 8px; align-items: center;">
+            <!--Input 1: text box to capture user's search term  as a key:value pair-->
+            <input type="text" name="q" placeholder="SEARCH TASKS" value="{{ query }}">
+            <!--Input 2: a "submit" trigger button to send user's search term using GET method-->
+            <input type="submit" value="SEARCH">
+        </form>
+    </fieldset>
+   <!-- 
+    DASHBOARD TRIGGER BUTTON: 'EXPORT TASKS TO CALENDAR (.ICS)'
+    HTML FORM: '<form action="/export_ics" method="GET" ...'
+    HTTP REQUEST METHOD: GET
+    URL SENT: '/export_ics' (http://127.0.0.1:5000/export_ics)
+    HANDLER FUNCTION: @app.route('/export_ics')
+    User request for .ics file download
+    -->
+    <fieldset style="border: 2px solid black; padding: 10px; margin-bottom: 20px;">
+        <legend><strong>EXPORT TASKS TO CALENDAR (.ICS):</strong></legend>
+        <form action="/export_ics" method="GET" style="display: flex; gap: 8px; align-items: center;">
+            <input type="submit" value="EXPORT TASKS TO CALENDAR (.ICS)">
+        </form>
+    </fieldset>
+    
+   <!-- 
+    DASHBOARD TRIGGER BUTTON: 'ADD TASK'
+    HTML FORM: '<form action="/add" method="POST" ...'
+    HTTP REQUEST METHOD: POST
+    URL SENT: '/add' (http://127.0.0.1:5000/add)
+    HANDLER FUNCTION: @app.route('/add', methods=['POST'])
+    User request to add a new task to tasks list
+    -->
+    <fie
+    <fieldset style="border: 2px solid black; padding: 10px; margin-bottom: 20px;">
+        <legend><strong>ADD A NEW TASK:</strong></legend>
+        <form action="/add" method="POST" enctype="multipart/form-data">
+            <!--Input 1: text box to capture user's new task title-->
+            <input type="text" name="title" placeholder="NEW TASK" required>
+            <!--Input 2: text box to capture user defined task due date-->
+            <input type="date" name="due_date" required>
+            <!--Input 3: text box to capture user defined task due time-->
+            <input type="time" name="due_time" required>
+            <strong>CHOOSE NEW TASK IMAGE (optional):</strong>
+            <!--Input 4: capture user defined task image-->
+            <input type="file" name="image">
+            <div style="margin-top: 10px;">
+                <label>
+                    <input type="checkbox" name="repeat_daily">
+                    Repeat Daily (next 30 days)
+                </label>
+                <label style="margin-left: 20px;">
+                    <input type="checkbox" name="repeat_weekly">
+                    Repeat Weekly (next 4 weeks)
+                </label>
+            </div>
+            <!--Input 5: a "Add task" trigger button to send user's new task using POST method-->
+            <input type="submit" value="ADD TASK">
+        </form>
+    </fieldset>    
+
+    <!-- 
+    DASHBOARD TRIGGER BUTTON: 'EDIT TASK'
+    HTML FORM: '<form action="/update/{{ task_to_edit['id'] }}" method="POST"'
+    HTTP REQUEST METHOD: POST
+    URL SENT: '/update/<task_id>'(e.g. http://127.0.0.1:5000/update/X where X= task ID number)
+    HANDLER FUNCTION: @app.route('/update/<int:task_id>', methods=['POST'])
+    User request to edit a task in tasks list. /edit/<task_id> is used only when clicking the 
+        EDIT link (GET), not for the update form (POST).
+    -->
+    {% if task_to_edit %}
+    <fieldset style="border: 2px solid black; padding: 10px; margin-bottom: 20px;"> 
+    <legend><strong>EDIT TASK BELOW (optional):</strong></legend>
+    <form action="/update/{{ task_to_edit['id'] }}" method="POST" enctype="multipart/form-data">
+        <input type="text" name="title" value="{{ task_to_edit['title'] }}" required>
+        <input type="date" name="due_date" value="{{ task_to_edit['due_date'] }}" required>
+        <input type="time" name="due_time" value="{{ task_to_edit['due_time'] }}" required>
+        <input type="file" name="image"> <!-- optional new image -->
+        <div style="margin-top: 10px;">
+            <p style="color: red; font-size: 0.9em;">
+                !!! To avoid duplicates, delete any old repeated tasks before updating !!!
+            </p>  
+            <label>
+                <input type="checkbox" name="repeat_daily">
+                Repeat Daily (next 30 days)
+            </label>
+            <label style="margin-left: 20px;">
+                <input type="checkbox" name="repeat_weekly">
+                Repeat Weekly (next 4 weeks)
+            </label>
+        </div>
+        <input type="submit" value="UPDATE TASK">
+    </form>
+    </fieldset> 
+    {% endif %}
+    <!-- Task list starts here as table <table> containing an unordered list <ul> holdind list items <li>-->
+    <!-- 
+    DASHBOARD TRIGGER BUTTON: 'DELETE TASK', 'REMOVE TASK IMAGE', or 'TOGGLE COMPLETE/INCOMPLETE'
+    HTML FORM: '<form action="/bulk_action" method="POST" id="bulkForm">'
+    HTTP REQUEST METHOD: POST
+    URL SENT: '/bulk_action' (e.g. http://127.0.0.1:5000/bulk_action)
+    HANDLER FUNCTION: @app.route('/bulk_action', methods=['POST'])
+    User performs bulk actions on selected tasks
+    -->
+    <form action="/bulk_action" method="POST" id="bulkForm">
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <input type="submit" name="action" value="DELETE TASK">
+                </th>
+                <th>
+                    <input type="submit" name="action" value="REMOVE TASK IMAGE">
+                </th>
+                <th>
+                    <input type="submit" name="action" value="TOGGLE COMPLETE/INCOMPLETE">
+                </th>
+                <th>TASK TITLE</th>
+                <th>TASK IMAGE</th>
+                <th>TASK DUE DATE</th>
+                <th>TASK DUE TIME</th>
+                <th>REPEAT?</th>
+                <th>TASK STATUS</th>
+                <th>EDIT TASK</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        <!-- A within HTML Jinja2 for loop to display each task in the tasks list passed from app.py -->
+        {% for task in tasks %}
+        <!-- Assign a CSS class (from style.css) to the list item:
+        'complete' if task['done'] is True, otherwise 'incomplete' -->
+        <tr class="{{ 'complete' if task['done'] else 'incomplete' }}">
+            <!--First column with 300px maximum column width for task title and word wrap for long titles-->
+            <td><input type="checkbox" name="delete_ids" value="{{ task['id'] }}"></td>
+            <td><input type="checkbox" name="remove_image_ids" value="{{ task['id'] }}"></td>
+            <td><input type="checkbox" name="toggle_ids" value="{{ task['id'] }}"></td>
+            <td style="max-width: 250px; word-wrap: break-word;">{{ task['title'] }}</td>
+            <td>
+                {% if task['image'] %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ task['image']) }}" alt="Task Image" class="task-image" style="max-width:100px;">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+            <!--Third column for task due date-->
+            <td>{{ task['due_date'] }}</td>
+            <!--Fourth column for task due time-->
+            <td>{{ task['due_time'] }}</td>
+            <td>{{ task.get('repeat', 'none') | upper }}</td>
+            <!--Fifth column containing COMPLETE or INCOMPLETE depending on if task['done'] is True -->
+            <td class="{{ 'complete' if task['done'] else 'incomplete' }}">{{ 'COMPLETE' if task['done'] else 'INCOMPLETE' }}</td>
+            <!--Sixth column containing form trigger buttons to 'Delete', 'Edit', and task status, 'Mark Complete' or 'Mark Incomplete'-->
+            <td>
+                <a href="/edit/{{ task['id'] }}">
+                  <button type="button" class="edit-button" style="margin-left: 5px;">EDIT TASK</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}  <!--End for loop-->
+        </tbody>
+    </table>
+    </form>
+</body>
+</html>
+
+
